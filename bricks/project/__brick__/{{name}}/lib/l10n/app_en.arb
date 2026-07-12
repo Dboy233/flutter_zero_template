@@ -1,0 +1,21 @@
+{
+  "appTitle": "Flutter Template",
+  "homeTitle": "Home",
+  "settingsTitle": "Settings",
+  "settingsThemeMode": "Theme Mode",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsLanguage": "Language",
+  "settingsLangZh": "中文",
+  "settingsLangEn": "English",
+  "homeLoading": "Loading...",
+  "homeLoadMore": "Loading more...",
+  "homeErrorRetry": "Retry",
+  "homeEmpty": "No data",
+  "homePostByUser": "By User {userId}",
+  "homeLoadFailed": "Load failed",
+  "homeGenericError": "Something went wrong",
+  "homeRefreshSuccessTitle": "Refresh Success",
+  "homeIKnow": "Got it"
+}

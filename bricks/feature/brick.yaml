@@ -1,0 +1,16 @@
+name: feature
+description: 生成 MVI 功能模块
+version: 1.0.0
+
+environment:
+  mason: ^0.1.2
+
+vars:
+  name:
+    type: string
+    description: 模块小写下划线名称，如 user_setting
+    prompt: 请输入模块名称
+  package_name:
+    type: string
+    description: 项目包名，如 com.example.my_app
+    prompt: 请输入项目包名
