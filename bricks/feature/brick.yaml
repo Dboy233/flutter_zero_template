@@ -12,5 +12,5 @@ vars:
     prompt: 请输入模块名称
   package_name:
     type: string
-    description: 项目包名，如 com.example.my_app
-    prompt: 请输入项目包名
+    description: flutter包名/项目名。
+    prompt: 请输入flutter包名/项目名。

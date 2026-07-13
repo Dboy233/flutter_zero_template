@@ -17,9 +17,6 @@ migrate_working_dir/
 *.ipr
 *.iws
 
-# 例外：根 .idea/modules.xml 引用此文件，跨机器需要 / Exception: referenced by root modules.xml
-!{{name}}.iml
-
 # 子目录 .idea/ — 从根目录打开时不读取，独立打开时自动生成 / Ignored: auto-generated when opened standalone
 .idea/
 
@@ -41,15 +38,6 @@ migrate_working_dir/
 # Generated localization files — 通过 `flutter gen-l10n` 生成
 # Generated localization files — run `flutter gen-l10n` to regenerate
 lib/l10n/gen/
-
-# Platform directories — generated via `flutter create .`
-# 平台目录 — 通过 `flutter create .` 自动生成
-/android/
-/ios/
-/linux/
-/macos/
-/windows/
-/web/
 
 # Symbolication related
 app.*.symbols

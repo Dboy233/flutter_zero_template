@@ -65,6 +65,7 @@ void main(List<String> args) {
     '.flutter-plugins-dependencies',
     'home',
     'settings',
+    'gen'
     // 需要排除的二进制或无关文件可在此追加，例如：
     // '.png', 'png', '.jpg', '.keystore',
   ];

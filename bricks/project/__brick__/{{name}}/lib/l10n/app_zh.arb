@@ -1,21 +1,3 @@
 {
-  "appTitle": "Flutter 模板",
-  "homeTitle": "首页",
-  "settingsTitle": "设置",
-  "settingsThemeMode": "主题模式",
-  "settingsThemeSystem": "跟随系统",
-  "settingsThemeLight": "浅色",
-  "settingsThemeDark": "深色",
-  "settingsLanguage": "语言",
-  "settingsLangZh": "中文",
-  "settingsLangEn": "English",
-  "homeLoading": "加载中…",
-  "homeLoadMore": "加载更多…",
-  "homeErrorRetry": "重试",
-  "homeEmpty": "暂无数据",
-  "homePostByUser": "作者：用户 {userId}",
-  "homeLoadFailed": "加载失败",
-  "homeGenericError": "出错了",
-  "homeRefreshSuccessTitle": "刷新成功",
-  "homeIKnow": "知道了"
+  "appTitle": "Fluzer app",
 }
