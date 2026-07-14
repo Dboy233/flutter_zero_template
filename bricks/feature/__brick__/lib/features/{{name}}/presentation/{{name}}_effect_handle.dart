@@ -1,70 +1,55 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:{{package_name}}/core/di/get_it_instance.dart';
 import 'package:{{package_name}}/core/effect/ui_effect.dart';
 import 'package:{{package_name}}/core/notifiers/toast_service.dart';
 
-/// {{#pascalCase}}{{name}}{{/pascalCase}} 模块的副作用处理器。
+/// {{#pascalCase}}{{name}}{{/pascalCase}} 模块的副作用处理器（责任链中的一个 handle）。
 ///
-/// 开发者可根据业务需求在这里处理 Toast、Dialog、Navigation 等一次性
-/// UI 动作。复杂场景建议按类型拆分为多个 handler。
+/// 返回 `true` 表示已处理（责任链命中即止），`false` 表示交给后续处理器。
 ///
-/// {{#pascalCase}}{{name}}{{/pascalCase}} effect handler.
+/// {{#pascalCase}}{{name}}{{/pascalCase}} effect handler (one handle in the
+/// responsibility chain).
 ///
-/// Developers can handle one-time UI actions (toast, dialog, navigation) here.
-/// Split into multiple handlers by type for complex scenarios.
-final class {{#pascalCase}}{{name}}{{/pascalCase}}EffectHandle {
-  /// 创建处理器。
-  ///
-  /// Creates the handler.
-  const {{#pascalCase}}{{name}}{{/pascalCase}}EffectHandle();
-
-  /// 处理副作用。
-  ///
-  /// Handles the side effect.
-  void handle(BuildContext context, UIEffect effect) {
-    switch (effect) {
-      case ToastEffect(:final message, :final messageCode):
-        if (message != null) {
-          getIt<ToastService>().showInfo(message);
-        } else if (messageCode != null) {
-          // 若项目使用 gen-l10n / slang / easy_localization 等国际化方案，
-          // 请在此按项目约定将 messageCode 解析为显示文本。
-          // If using gen-l10n, slang, or easy_localization, resolve the
-          // messageCode to localized text here according to your project setup.
-          getIt<ToastService>().showError(messageCode);
-        }
-      case DialogEffect(:final type, :final extra):
-        _handleDialog(context, type, extra);
-      case NavigationEffect(:final type, :final route, :final extra):
-        switch (type) {
-          case NavigationEffectType.navigate:
-            //TODO(fluzer): navigate
-            break;
-          case NavigationEffectType.push:
-          //TODO(fluzer): push
-            break;
-          case NavigationEffectType.pop:
-          //TODO(fluzer): pop
-            break;
-          case NavigationEffectType.replace:
-          //TODO(fluzer): replace
-            break;
-        }
-    }
+/// Return `true` to signal "handled" (the chain stops on the first match),
+/// `false` to let subsequent handlers run.
+bool {{#camelCase}}{{name}}{{/camelCase}}EffectHandle(
+  BuildContext context,
+  UIEffect effect,
+) {
+  if (effect is ToastEffect && effect.messageCode != null) {
+    getIt<ToastService>().showError(_mapMessageCode(effect.messageCode!));
+    return true;
   }
 
-  /// 处理对话框副作用。
-  ///
-  /// Handles dialog effects.
-  void _handleDialog(BuildContext context, String type, Object? extra) {
-    switch (type) {
-      // 按业务类型添加弹窗处理。
-      // Add dialog handling by business type.
-      default:
-        break;
-    }
+  if (effect is DialogEffect) {
+    return _handleDialog(context, effect.type, effect.extra);
   }
+  // 不认领其它类型，交给框架默认 handle。
+  // Do not claim other types; let the framework defaults run.
+  return false;
+}
 
+/// 将 messageCode 映射为显示文本。
+///
+/// 脚手架占位实现直接返回 code；请在项目中替换为真实的 i18n 解析。
+///
+/// Maps a messageCode to display text.
+///
+/// The scaffold placeholder returns the code as-is; replace it with your
+/// real i18n resolution in the project.
+String _mapMessageCode(String code) {
+  // TODO(fluzer): 替换为项目的 i18n 解析，例如 l10n.yourKey。
+  return code;
+}
+
+/// 处理对话框副作用。
+///
+/// Handles dialog effects.
+bool _handleDialog(BuildContext context, String type, Object? extra) {
+  switch (type) {
+    // 按业务类型添加弹窗处理。
+    // Add dialog handling by business type.
+    default:
+      return false;
+  }
 }

@@ -72,14 +72,13 @@ class ErrorHandler {
 
   // ── Internal helpers ──────────────────────────────────────────────
 
-  static AppException _handleDioException(DioException error) {
+  static AppException? _handleDioException(DioException error) {
     switch (error.type) {
       case DioExceptionType.cancel:
-        return UnknownException(
-          'Request cancelled',
-          code: 'CANCEL',
-          originalError: error,
-        );
+        // 主动取消的请求应静默忽略：返回 null，调用方据此跳过 toast / 状态更新。
+        // Intentionally cancelled requests are silently ignored: return null so
+        // callers skip the toast / state update.
+        return null;
 
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:

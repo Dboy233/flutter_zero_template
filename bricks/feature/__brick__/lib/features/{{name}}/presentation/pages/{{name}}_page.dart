@@ -33,13 +33,11 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Page extends StatelessWidget {
               repository: getIt<{{#pascalCase}}{{name}}{{/pascalCase}}Repository>(),
             );
       },
-      // 默认处理 ToastEffect；新增自定义 Effect 时，先在
-      // lib/core/effect/ui_effect.dart 中添加 final class，再在此处增加 case。
-      // Default handler for ToastEffect; add custom effect cases here after
-      // declaring the new final class in lib/core/effect/ui_effect.dart.
-      child: EffectListener<{{#pascalCase}}{{name}}{{/pascalCase}}Bloc, {{#pascalCase}}{{name}}{{/pascalCase}}State>(
-        onEffect: const {{#pascalCase}}{{name}}{{/pascalCase}}EffectHandle().handle,
-        child: const {{#pascalCase}}{{name}}{{/pascalCase}}Body(),
+      child: const EffectListener<{{#pascalCase}}{{name}}{{/pascalCase}}Bloc, {{#pascalCase}}{{name}}{{/pascalCase}}State>(
+        effectsHandles: [
+          {{#camelCase}}{{name}}{{/camelCase}}EffectHandle,
+        ],
+        child: {{#pascalCase}}{{name}}{{/pascalCase}}Body(),
       ),
     );
   }

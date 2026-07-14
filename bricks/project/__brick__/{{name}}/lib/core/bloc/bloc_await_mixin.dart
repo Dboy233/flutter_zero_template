@@ -115,6 +115,30 @@ mixin BlocAwaitMixin<Event, State> on Bloc<Event, State> {
     }
   }
 
+  /// 以「自动收尾」方式注册事件处理器。
+  ///
+  /// 与 [on] 命名统一、语义相近，区别在于内部用 `try/finally` 自动调用
+  /// [completeAwait]，开发者无需在 handler 的 `finally` 中手动书写，避免
+  /// 漏写导致 [RefreshIndicator] 挂起。
+  ///
+  /// Registers an event handler with automatic completion.
+  ///
+  /// Similar to [on] but wraps [handler] with `try/finally` that automatically
+  /// calls [completeAwait], so developers never forget it (which would hang a
+  /// [RefreshIndicator]).
+  void onAwait<E extends Event>(
+    String key,
+    Future<void> Function(E event, Emitter<State> emit) handler,
+  ) {
+    on<E>((event, emit) async {
+      try {
+        await handler(event, emit);
+      } finally {
+        completeAwait(key);
+      }
+    });
+  }
+
   /// BLoC 关闭时清理未完成的 Completer，避免内存泄漏和永久挂起。
   ///
   /// Cleans up pending completers when the BLoC is closed to prevent memory

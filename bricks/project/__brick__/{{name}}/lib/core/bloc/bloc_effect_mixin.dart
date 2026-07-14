@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../effect/effect_state.dart';
 import '../effect/ui_effect.dart';
 
-/// 为 BLoC 添加一次性 UI 副作用能力。
+/// 为 BLoC 添加一次性 UI 副作用能力（基于独立 Stream）。
 ///
-/// 项目默认提供 [ToastEffect]、[DialogEffect]、[NavigationEffect]。
-/// 自定义 Effect 需在 `lib/core/effect/ui_effect.dart` 中新增 `final class`，
-/// 本 Mixin 与 [EffectState] 无需修改。
+/// 项目默认提供 [ToastEffect]、[DialogEffect]、[LoadingEffect]（位于
+/// `lib/core/effect/ui_effect.dart`）。由于 [UIEffect] 是开放基类，自定义
+/// Effect 可在任意库中直接 `extends UIEffect` 新增类型，本 Mixin 无需修改。
+///
+/// 副作用通过 [effectStream] 发出，由 UI 层的 [EffectListener] 订阅消费，
+/// **不污染**状态对象，也不存在单槽覆盖 / 重复投递问题。
 ///
 /// 用法：
 /// ```dart
@@ -26,12 +30,16 @@ import '../effect/ui_effect.dart';
 /// ```
 ///
 ///
-/// Adds one-time UI effect support to a BLoC.
+/// Adds one-time UI side-effect support to a BLoC (via a dedicated Stream).
 ///
-/// The project provides [ToastEffect], [DialogEffect], and [NavigationEffect]
-/// out of the box. To add a custom effect, declare a new `final class` in
-/// `lib/core/effect/ui_effect.dart`; this mixin and [EffectState] do not need
-/// to be changed.
+/// The project provides [ToastEffect], [DialogEffect], and [LoadingEffect]
+/// (in `lib/core/effect/ui_effect.dart`). Because [UIEffect] is an open base
+/// class, a custom effect can be added in any library simply by extending
+/// [UIEffect]; this mixin does not need to be changed.
+///
+/// Effects are emitted through [effectStream] and consumed by the UI layer's
+/// [EffectListener]. This keeps the state object clean and avoids single-slot
+/// overwrites or duplicate deliveries.
 ///
 /// Usage:
 /// ```dart
@@ -49,25 +57,24 @@ import '../effect/ui_effect.dart';
 /// ```dart
 /// emitEffect(const ToastEffect(message: 'Loading failed'));
 /// ```
-mixin BlocEffectMixin<S extends EffectState> on BlocBase<S> {
+mixin BlocEffectMixin<S> on BlocBase<S> {
+  final StreamController<UIEffect> _effectController =
+      StreamController<UIEffect>.broadcast();
+
+  /// 一次性 UI 副作用流。UI 层通过 [EffectListener] 订阅并消费。
+  ///
+  /// One-time UI effect stream. The UI layer subscribes and consumes it via
+  /// [EffectListener].
+  Stream<UIEffect> get effectStream => _effectController.stream;
+
   /// 触发一次性 UI 副作用。
   ///
-  /// 通过 [EffectState.copyWithEffect] 将 effect 写入状态，由 [EffectListener]
-  /// 监听并消费。
-  ///
   /// Emits a one-time UI side effect.
-  /// Writes the effect into state via [EffectState.copyWithEffect], which is
-  /// then observed and consumed by [EffectListener].
-  void emitEffect(UIEffect effect) {
-    emit(state.copyWithEffect(effect: effect) as S);
-  }
+  void emitEffect(UIEffect effect) => _effectController.add(effect);
 
-  /// 消费当前副作用，重置 effect 为 null。
-  ///
-  /// 调用 [EffectState.copyWithEffect] 时不传参数，使用默认 null 清除 effect。
-  ///
-  /// Consumes the current effect and resets it to null.
-  void consumeEffect() {
-    emit(state.copyWithEffect() as S);
+  @override
+  Future<void> close() {
+    unawaited(_effectController.close());
+    return super.close();
   }
 }

@@ -1,81 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/bloc_effect_mixin.dart';
-import 'effect_state.dart';
+import 'effect_handle/default_dialog_effect_handle.dart';
+import 'effect_handle/default_loading_effect_handle.dart';
+import 'effect_handle/default_toast_effect_handle.dart';
 import 'ui_effect.dart';
 
-/// 自动监听并消费一次性 UI 副作用。
-///
-/// 项目默认提供 [ToastEffect]、[DialogEffect]、[NavigationEffect]。
-/// 如需自定义 Effect，请先在 `ui_effect.dart` 中新增 `final class`，
-/// 然后在本组件的 [onEffect] switch 中增加对应分支。
-///
-/// 用法：
-/// ```dart
-/// BlocProvider(
-///   create: (_) {
-///     return getIt<MyBloc>();
-///   },
-///   child: EffectListener<MyBloc, MyState>(
-///     onEffect: (context, effect) {
-///       switch (effect) {
-///         case ToastEffect(:final message, :final messageCode):
-///           final text = message ?? context.l.resolve(messageCode);
-///           getIt<ToastService>().showError(text);
-///         case NavigationEffect(:final route):
-///           context.go(route);
-///         case _:
-///           break;
-///       }
-///     },
-///     child: const MyPageBody(),
-///   ),
-/// )
-/// ```
-///
-///
-/// Automatically listens to and consumes one-time UI effects.
-///
-/// The project provides [ToastEffect], [DialogEffect], and [NavigationEffect]
-/// out of the box. To add a custom effect, declare a new `final class` in
-/// `ui_effect.dart` first, then add a corresponding branch in the [onEffect]
-/// switch of this widget.
-///
-/// Usage:
-/// ```dart
-/// BlocProvider(
-///   create: (_) {
-///     return getIt<MyBloc>();
-///   },
-///   child: EffectListener<MyBloc, MyState>(
-///     onEffect: (context, effect) {
-///       switch (effect) {
-///         case ToastEffect(:final message, :final messageCode):
-///           final text = message ?? context.l.resolve(messageCode);
-///           getIt<ToastService>().showError(text);
-///         case NavigationEffect(:final route):
-///           context.go(route);
-///         case _:
-///           break;
-///       }
-///     },
-///     child: const MyPageBody(),
-///   ),
-/// )
-/// ```
-class EffectListener<B extends BlocBase<S>, S extends EffectState>
-    extends StatelessWidget {
+typedef EffectHandle = bool Function(BuildContext context, UIEffect effect);
+
+class EffectListener<B extends BlocBase<S>, S> extends StatelessWidget {
+  /// 创建副作用监听组件。
+  ///
+  /// Creates the effect-listening widget.
   const EffectListener({
-    required this.onEffect,
     required this.child,
+    this.effectsHandles = const [],
     super.key,
   });
 
-  /// 副作用处理回调。
-  ///
-  /// Callback invoked when a new effect is emitted.
-  final void Function(BuildContext context, UIEffect effect) onEffect;
+  final List<EffectHandle> effectsHandles;
 
   /// 子组件。
   ///
@@ -84,23 +30,74 @@ class EffectListener<B extends BlocBase<S>, S extends EffectState>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<B, S>(
-      listenWhen: (previous, current) {
-        return previous.effect != current.effect && current.effect != null;
-      },
-      listener: (context, state) {
-        final bloc = context.read<B>();
-        if (bloc is! BlocEffectMixin<S>) {
-          throw StateError(
-            '$B must use BlocEffectMixin<$S> to support effects. '
-            'Add `with BlocEffectMixin<$S>` to your BLoC class.',
-          );
-        }
-        final effect = state.effect!;
-        onEffect(context, effect);
-        bloc.consumeEffect();
-      },
+    // 业务处理器优先；框架级通用处理器作为兜底自动追加到链尾。
+    // 第一个返回 true 的处理器胜出，命中即停止。
+    // Business handlers run first; the framework-level generic handlers are
+    // appended at the chain tail as fallbacks. The first handler returning
+    // true wins.
+    // 注意：不可对入参列表直接 add（调用方可能传入 const 列表），
+    // 这里构造一份新的可变列表再下传。
+    final handles = [
+      ...effectsHandles,
+      defaultToastHandle,
+      defaultDialogHandle,
+      defaultLoadingHandle,
+    ];
+
+    final bloc = context.read<B>();
+    if (bloc is! BlocEffectMixin<S>) {
+      throw StateError(
+        '$B must use BlocEffectMixin<$S> to support effects. '
+        'Add `with BlocEffectMixin<$S>` to your BLoC class.',
+      );
+    }
+    return _EffectStreamListener<S>(
+      bloc: bloc,
+      effectsHandles: handles,
       child: child,
     );
   }
+}
+
+class _EffectStreamListener<S> extends StatefulWidget {
+  const _EffectStreamListener({
+    required this.bloc,
+    required this.effectsHandles,
+    required this.child,
+  });
+
+  final BlocEffectMixin<S> bloc;
+  final List<EffectHandle> effectsHandles;
+  final Widget child;
+
+  @override
+  State<_EffectStreamListener<S>> createState() =>
+      _EffectStreamListenerState<S>();
+}
+
+class _EffectStreamListenerState<S> extends State<_EffectStreamListener<S>> {
+  late final StreamSubscription<UIEffect> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = widget.bloc.effectStream.listen(_onEffect);
+  }
+
+  void _onEffect(UIEffect effect) {
+    for (final handle in widget.effectsHandles) {
+      if (handle.call(context, effect)) {
+        return;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    unawaited(_subscription.cancel());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
