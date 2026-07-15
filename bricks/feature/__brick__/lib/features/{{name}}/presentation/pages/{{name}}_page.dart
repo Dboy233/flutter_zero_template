@@ -4,7 +4,7 @@ import 'package:{{package_name}}/core/di/injection.dart';
 import 'package:{{package_name}}/core/effect/effect.dart';
 import 'package:{{package_name}}/features/{{name}}/data/repositories/{{name}}_repository.dart';
 import 'package:{{package_name}}/features/{{name}}/presentation/bloc/{{name}}_bloc.dart';
-import 'package:{{package_name}}/features/{{name}}/presentation/{{name}}_effect_handle.dart';
+import 'package:{{package_name}}/features/{{name}}/presentation/effects/{{name}}_effect_handle.dart';
 import 'package:{{package_name}}/features/{{name}}/presentation/pages/{{name}}_body.dart';
 
 /// {{#pascalCase}}{{name}}{{/pascalCase}} 页面。
