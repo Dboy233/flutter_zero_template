@@ -1,17 +1,7 @@
 # {{name}}
 
-A new Flutter project.
+Flutter Zero 企业级 MVI 模板的**示例应用**（模板落地后的真实项目样例，含 `home` 模块演示）。
 
-## Getting Started
+📚 完整文档请访问：**Flutter Zero 文档站**（地址待补充）
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> 文档站涵盖：架构说明、快速上手（CLI 创建项目 / 生成模块）、Effect 系统、Notifiers 系统等。

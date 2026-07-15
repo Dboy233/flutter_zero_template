@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/storage_service.dart';
+import '../storage/storage_service.dart';
 import 'app_locales.dart';
 
 /// 语言切换状态管理器。

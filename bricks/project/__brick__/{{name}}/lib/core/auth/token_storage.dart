@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../data/secure_storage_service.dart';
+import '../storage/secure_storage_service.dart';
 
 /// 认证令牌生命周期管理器。
 ///

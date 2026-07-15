@@ -1,9 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/token_storage.dart';
-import '../data/secure_storage_service.dart';
-import '../data/shared_preferences_storage_service.dart';
-import '../data/storage_service.dart';
 import '../localization/locale_provider.dart';
 import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
@@ -13,6 +10,9 @@ import '../notifiers/implementers/easyloading_toast_service.dart';
 import '../notifiers/implementers/toastification_service.dart';
 import '../notifiers/loading_service.dart';
 import '../notifiers/toast_service.dart';
+import '../storage/secure_storage_service.dart';
+import '../storage/shared_preferences_storage_service.dart';
+import '../storage/storage_service.dart';
 import '../theme/theme_provider.dart';
 import 'get_it_instance.dart';
 import 'injection_base.dart';

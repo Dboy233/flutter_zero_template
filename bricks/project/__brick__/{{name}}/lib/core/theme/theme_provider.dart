@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/storage_service.dart';
+import '../storage/storage_service.dart';
 
 /// 主题模式状态管理器。
 ///

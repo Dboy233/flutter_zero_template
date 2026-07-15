@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import '../data/shares_repositories.dart';
 import 'get_it_instance.dart';
 
 /// DI 抽象基类。
@@ -49,5 +50,6 @@ abstract class InjectionBase {
   @protected
   Future<void> registerFeatureModules() async {
     // XxxModule.register(getIt);
+    SharesRepositories.register(getIt);
   }
 }
