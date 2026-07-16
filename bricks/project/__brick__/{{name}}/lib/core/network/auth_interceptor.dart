@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../auth/token_storage.dart';
+import '../error/app_error_codes.dart';
 
 /// 认证令牌拦截器。
 ///
@@ -96,7 +97,7 @@ class AuthInterceptor extends Interceptor {
     // the caller redirect to login. 403 means insufficient permission and
     // does not necessarily require clearing the token; business logic can
     // handle it in [onUnauthorized] if needed.
-    if (err.response?.statusCode == 401) {
+    if (err.response?.statusCode == AppErrorCodes.unauthorized) {
       unawaited(tokenStorage.clearToken());
       onUnauthorized?.call();
     }

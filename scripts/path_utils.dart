@@ -69,14 +69,34 @@ String join(String a, String b) {
   return '$a/$b';
 }
 
-bool isExcluded(String name, String ext, List<String> exclude) {
-  for (final e in exclude) {
+/// 判断相对路径 [relativePath] 是否被 [excludePaths] 中的路径条目排除。
+///
+/// [excludePaths] 条目为以输入根目录为起点的相对路径（如 `.git`、
+/// `lib/features/home`、`lib/core/data/models/post_model.dart`）。
+/// 命中条件：路径完全相等，或以其为前缀的子孙路径（如 `lib/features/home/x.dart`）。
+bool isExcludedByPath(String relativePath, List<String> excludePaths) {
+  for (final e in excludePaths) {
     final ne = normalize(e);
-    if (ne == name) return true; // 文件夹/文件名完全匹配
-    if (ne == ext) return true; // 后缀（含点），如 ".dart"
-    if (ext.isNotEmpty && ne == ext.substring(1)) {
-      return true; // 后缀（无点），如 "dart"
-    }
+    if (ne.isEmpty) continue;
+    if (relativePath == ne || relativePath.startsWith('$ne/')) return true;
+  }
+  return false;
+}
+
+/// 判断文件扩展名 [ext]（含点，如 `.dart`）是否被 [excludeSuffixes] 中的后缀排除。
+///
+/// 后缀条目以 `.` 开头（如 `.dart`、`.freezed.dart`、`.png`）：
+/// - 扩展名完全相等时命中，如 `.dart` 命中 `foo.dart`；
+/// - 复合后缀按其结尾命中，如 `.dart` 也会命中 `foo.freezed.dart`
+///   （因扩展名以 `.dart` 结尾），而 `.freezed.dart` 仅命中扩展名
+///   恰好为 `.freezed.dart` 的文件。
+/// 目录可传空扩展名字符串，自然不匹配。
+bool isExcludedBySuffix(String ext, List<String> excludeSuffixes) {
+  if (ext.isEmpty) return false;
+  for (final s in excludeSuffixes) {
+    final ns = normalize(s);
+    if (ns.isEmpty) continue;
+    if (ns == ext || ext.endsWith(ns)) return true;
   }
   return false;
 }

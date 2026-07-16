@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../error/app_error_codes.dart';
 import '../error/app_exception.dart';
 import '../network/dio_client.dart';
 
@@ -83,8 +84,10 @@ abstract class BaseRepository {
     if (data == null) return [];
 
     if (data is! List) {
-      throw ArgumentError(
-        'Expected response data to be a List, got ${data.runtimeType}',
+      throw ParseException(
+        null,
+        code: AppErrorCodes.parseWrongType,
+        originalError: data,
       );
     }
 
@@ -106,7 +109,15 @@ abstract class BaseRepository {
     final data = response.data;
     if (data == null) return null;
 
-    return fromJson(data as Map<String, dynamic>);
+    if (data is! Map<String, dynamic>) {
+      throw ParseException(
+        null,
+        code: AppErrorCodes.parseWrongType,
+        originalError: data,
+      );
+    }
+
+    return fromJson(data);
   }
 
   /// 将完整 API 响应解析为 freezed / json_serializable 模型。
@@ -164,8 +175,8 @@ abstract class BaseRepository {
         rethrow;
       } catch (e) {
         throw ParseException(
-          'Failed to parse response: $e',
-          code: 'PARSE',
+          null,
+          code: AppErrorCodes.parseFromJson,
           originalError: e,
         );
       }
@@ -173,15 +184,93 @@ abstract class BaseRepository {
 
     if (data == null) {
       throw const ParseException(
-        'Response data is null',
-        code: 'PARSE_NULL',
+        null,
+        code: AppErrorCodes.parseNullData,
       );
     }
 
     throw ParseException(
-      'Expected response data to be a JSON object, got ${data.runtimeType}',
-      code: 'PARSE_TYPE',
+      null,
+      code: AppErrorCodes.parseWrongType,
       originalError: data,
+    );
+  }
+
+  /// 解析 HTTP 成功但业务状态码失败的包装型响应。
+  ///
+  /// 先检查 HTTP 状态码为 200~299；非 200 响应直接抛 [ServerException]，
+  /// 由上层 `ErrorHandler` 按 HTTP 码兜底翻译。状态码确认后，将响应体通过
+  /// [parseBody] 转换为结构化类型 [B]，后续 [isSuccess]、[extractCode]、
+  /// [extractMessage]、[extractData] 均在类型化的 [B] 上访问，无需反复
+  /// `as Map<String, dynamic>`。
+  ///
+  /// 常见于国内后端接口返回 200 但 body 内携带
+  /// `{code: 10001, message: "库存不足", data: null}` 的场景。框架不猜测
+  /// 字段名，由业务方提供解析与提取逻辑；本方法只负责统一抛出
+  /// [BusinessException]。
+  ///
+  /// [parseBody] 将原始响应体转换为结构化类型 [B]（如 freezed 响应模型）。
+  /// [isSuccess] 判断业务是否成功；返回 `false` 时抛出异常。
+  /// [extractCode] 可选，从结构化响应体提取业务错误码。
+  /// [extractMessage] 可选，从结构化响应体提取服务端文案（已翻译）。
+  /// [extractData] 从成功响应体提取最终 [T] 数据。
+  ///
+  /// 用法：
+  /// ```dart
+  /// Future<User> getUser(String id) async {
+  ///   final response = await client.get('/users/$id');
+  ///   return parseBusinessResponse<User, ApiResponse<User>>(
+  ///     response,
+  ///     parseBody: (body) => ApiResponse<User>.fromJson(
+  ///       body as Map<String, dynamic>,
+  ///     ),
+  ///     isSuccess: (body) => body.code == 0,
+  ///     extractCode: (body) => body.code,
+  ///     extractMessage: (body) => body.message,
+  ///     extractData: (body) => body.data,
+  ///   );
+  /// }
+  /// ```
+  ///
+  /// Parses a wrapped response where HTTP status is 200-299 but the business-level
+  /// status code indicates failure.
+  ///
+  /// First checks the HTTP status code is in the 200-299 range; non-2xx responses
+  /// throw [ServerException] immediately so the upper `ErrorHandler` can localize
+  /// by HTTP code. After confirming the status, the raw body is converted to a
+  /// structured type [B] via [parseBody]. Then [isSuccess], [extractCode],
+  /// [extractMessage] and [extractData] operate on the typed [B] without repeated
+  /// `as Map<String, dynamic>` casts.
+  ///
+  /// Common in APIs that return `{code: 10001, message: "...", data: null}`.
+  /// The framework does not assume field names; the caller provides parsing and
+  /// extraction logic, and this helper only unifies the throw of
+  /// [BusinessException].
+  T parseBusinessResponse<T, B>(
+    Response<dynamic> response, {
+    required B Function(dynamic body) parseBody,
+    required bool Function(B body) isSuccess,
+    required T Function(B body) extractData,
+    int? Function(B body)? extractCode,
+    String? Function(B body)? extractMessage,
+  }) {
+    final statusCode = response.statusCode;
+    if (statusCode == null || statusCode < 200 || statusCode >= 300) {
+      throw ServerException(
+        null,
+        code: statusCode ?? AppErrorCodes.unknown,
+        originalError: response,
+      );
+    }
+
+    final B body = parseBody(response.data);
+    if (isSuccess(body)) {
+      return extractData(body);
+    }
+    throw BusinessException(
+      extractMessage?.call(body),
+      code: extractCode?.call(body),
+      originalError: body,
     );
   }
 }

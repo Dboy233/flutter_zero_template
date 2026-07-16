@@ -4,6 +4,7 @@ import '../auth/token_storage.dart';
 import '../localization/locale_provider.dart';
 import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
+import '../network/locale_interceptor.dart';
 import '../notifiers/desktop_toast_service.dart';
 import '../notifiers/implementers/easyloading_service.dart';
 import '../notifiers/implementers/easyloading_toast_service.dart';
@@ -98,12 +99,16 @@ class Injection extends InjectionBase {
   ///
   /// Registers the network layer dependencies.
   void _registerNetworkLayer() {
-    // DioClient 注入 AuthInterceptor，自动为每个请求附加 Bearer token。
-    // DioClient is wired with AuthInterceptor, which auto-attaches
-    // the Bearer token to every request.
+    // DioClient 注入 AuthInterceptor（Bearer token）与 LocaleInterceptor
+    // （Accept-Language，让后端翻译错误文案）。
+    // DioClient is wired with AuthInterceptor (Bearer token) and
+    // LocaleInterceptor (Accept-Language, so the backend can translate errors).
     getIt.registerLazySingleton<DioClient>(
       () => DioClient(
-        interceptors: [AuthInterceptor(tokenStorage: getIt<TokenStorage>())],
+        interceptors: [
+          AuthInterceptor(tokenStorage: getIt<TokenStorage>()),
+          LocaleInterceptor(localeProvider: getIt<LocaleProvider>()),
+        ],
       ),
     );
   }

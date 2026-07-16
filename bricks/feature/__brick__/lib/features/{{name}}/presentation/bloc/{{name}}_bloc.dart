@@ -16,7 +16,8 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Bloc extends Bloc<{{#pascalCase}}{{n
     with
         BlocAwaitMixin<{{#pascalCase}}{{name}}{{/pascalCase}}Event, {{#pascalCase}}{{name}}{{/pascalCase}}State>,
         BlocEffectMixin<{{#pascalCase}}{{name}}{{/pascalCase}}State>,
-        BlocCancelTokenMixin<{{#pascalCase}}{{name}}{{/pascalCase}}State> {
+        BlocCancelTokenMixin<{{#pascalCase}}{{name}}{{/pascalCase}}State>,
+        BlocErrorHandlerMixin<{{#pascalCase}}{{name}}{{/pascalCase}}State>{
   /// 创建 BLoC。
   ///
   /// Creates the BLoC.

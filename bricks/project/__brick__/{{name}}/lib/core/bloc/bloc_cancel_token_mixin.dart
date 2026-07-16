@@ -26,7 +26,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///
 /// ```dart
 /// class ItemBloc extends Bloc<ItemEvent, ItemState>
-///     with BlocCancelTokenMixin {
+///     with BlocCancelTokenMixin, BlocErrorHandlerMixin {
 ///
 ///   Future<void> _loadItems(Emitter emit) async {
 ///     try {
@@ -34,9 +34,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///         cancelToken: token('items'), // one line, fully managed
 ///       );
 ///       emit(...);
-///     } on DioException catch (e) {
-///       if (e.type == DioExceptionType.cancel) return; // silent
-///       _toastService.showError('...');
+///     } catch (e) {
+///       if (isCancelled(e)) return; // silent, no Dio import needed
+///       final ex = handleError(e);
+///       if (ex != null) emitEffect(ex.toToastEffect());
 ///     }
 ///   }
 ///
@@ -85,7 +86,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///
 /// ```dart
 /// class ItemBloc extends Bloc<ItemEvent, ItemState>
-///     with BlocCancelTokenMixin {
+///     with BlocCancelTokenMixin, BlocErrorHandlerMixin {
 ///
 ///   Future<void> _loadItems(Emitter emit) async {
 ///     try {
@@ -93,9 +94,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///         cancelToken: token('items'), // one line, fully managed
 ///       );
 ///       emit(...);
-///     } on DioException catch (e) {
-///       if (e.type == DioExceptionType.cancel) return; // silent
-///       _toastService.showError('...');
+///     } catch (e) {
+///       if (isCancelled(e)) return; // silent, no Dio import needed
+///       final ex = handleError(e);
+///       if (ex != null) emitEffect(ex.toToastEffect());
 ///     }
 ///   }
 ///

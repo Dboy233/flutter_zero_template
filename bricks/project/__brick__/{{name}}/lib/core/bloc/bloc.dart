@@ -2,3 +2,4 @@
 export 'bloc_await_mixin.dart';
 export 'bloc_cancel_token_mixin.dart';
 export 'bloc_effect_mixin.dart';
+export 'bloc_error_handler_mixin.dart';

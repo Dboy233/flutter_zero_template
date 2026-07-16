@@ -21,22 +21,27 @@ abstract class UIEffect {
 
 /// Toast 提示副作用。
 ///
-/// 本类不强制依赖任何国际化框架。[message] 可直接用于显示固定文本；
-/// [messageCode] 可用于 gen-l10n、slang、easy_localization 等任意方案，
-/// 由 UI 层（框架默认处理器或业务自定义处理器）自行决定如何解析。
-/// 也可以同时提供两者，让 UI 层优先使用 [message]。
+/// 本类不强制依赖任何国际化框架。展示优先级由 UI 层处理：
+/// 1. [message]：可直接显示的固定/服务端文本，优先使用；
+/// 2. [l10nCode]：开发者自定义的本地化键（如 `homeLoadFailed`），
+///    由业务 handle 按项目 i18n 方案解析；
+/// 3. [code]：网络请求内部错误码（HTTP 状态码或哨兵码），供 UI 层
+///    按码映射兜底文案（如"请求出错: 404"）。
 ///
 /// Toast message effect.
 ///
-/// This class does not depend on any internationalization framework. Use [message]
-/// for fixed text, or [messageCode] for any i18n key (gen-l10n, slang,
-/// easy_localization, etc.), resolved by the UI layer (the framework default
-/// handler or a business-specific handler). Both may be supplied; the UI layer
-/// prefers [message] when present.
+/// This class does not depend on any internationalization framework. The UI
+/// layer resolves it by priority:
+/// 1. [message]: fixed / server text, used first;
+/// 2. [l10nCode]: a developer-defined localization key (e.g. `homeLoadFailed`),
+///    resolved by a business handler per the project's i18n setup;
+/// 3. [code]: an internal network error code (HTTP status or sentinel),
+///    mapped by the UI layer to a fallback text (e.g. "Request failed: 404").
 final class ToastEffect extends UIEffect {
   const ToastEffect({
     this.message,
-    this.messageCode,
+    this.l10nCode,
+    this.code,
     this.extra,
   });
 
@@ -45,10 +50,18 @@ final class ToastEffect extends UIEffect {
   /// Fixed text to display directly.
   final String? message;
 
-  /// 消息标识，由 UI 层根据项目的国际化方案解析。
+  /// 开发者自定义的本地化键，由业务 handle 按项目 i18n 方案解析。
   ///
-  /// Message code resolved by the UI layer according to the project's i18n setup.
-  final String? messageCode;
+  /// A developer-defined localization key resolved by a business handler
+  /// according to the project's i18n setup.
+  final String? l10nCode;
+
+  /// 网络请求内部错误码（HTTP 状态码或 [AppErrorCodes] 内部哨兵码）。
+  /// UI 层据此映射兜底文案。
+  ///
+  /// Internal network error code (HTTP status or internal sentinel from
+  /// [AppErrorCodes]). The UI layer maps it to a fallback text.
+  final int? code;
 
   /// 额外参数。
   /// Extra arguments.

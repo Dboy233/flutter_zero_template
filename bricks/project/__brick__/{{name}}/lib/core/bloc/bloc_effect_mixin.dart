@@ -21,7 +21,7 @@ import '../effect/ui_effect.dart';
 ///
 /// 触发副作用：
 /// ```dart
-/// emitEffect(const ToastEffect(messageCode: 'homeLoadFailed'));
+/// emitEffect(const ToastEffect(l10nCode: 'homeLoadFailed'));
 /// ```
 ///
 /// 若不使用国际化，也可以直接传递固定文本：
@@ -49,7 +49,7 @@ import '../effect/ui_effect.dart';
 ///
 /// Emit an effect:
 /// ```dart
-/// emitEffect(const ToastEffect(messageCode: 'homeLoadFailed'));
+/// emitEffect(const ToastEffect(l10nCode: 'homeLoadFailed'));
 /// ```
 ///
 /// If the project does not use internationalization, fixed text can be passed

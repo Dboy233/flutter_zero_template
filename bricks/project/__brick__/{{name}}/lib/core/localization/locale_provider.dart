@@ -69,6 +69,12 @@ class LocaleProvider extends ChangeNotifier {
   /// The currently active locale.
   Locale get locale => _locale;
 
+  /// 当前语言码，供网络层（LocaleInterceptor）无 context 读取。
+  ///
+  /// Current language code, read by the network layer (LocaleInterceptor)
+  /// without a [BuildContext].
+  String get languageCode => _locale.languageCode;
+
   /// 设置新的语言环境，触发监听者重建 UI 并持久化到存储。
   ///
   /// [newLocale] 必须在 [AppLocales.supported] 中。

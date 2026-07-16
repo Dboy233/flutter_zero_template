@@ -1,42 +1,85 @@
 import 'package:dio/dio.dart';
 
+import 'app_error_codes.dart';
 import 'app_exception.dart';
+import 'server_message_extractor.dart';
 
 /// 将原始异常映射为类型化的 [AppException] 实例。
+///
+/// 本类是可实例化的策略类，BLoC 通常通过 [BlocErrorHandlerMixin] 使用。
+/// 需要自定义服务端消息提取策略时，在构造时传入 [serverMessageExtractor]；
+/// 默认按 `message` / `error` / `errorMsg` / `msg` 候选顺序取值。
 ///
 /// ## 用法
 ///
 /// ```dart
+/// final handler = ErrorHandler();
 /// try {
 ///   await fetchData();
 /// } catch (e, stackTrace) {
-///   final ex = ErrorHandler.handle(e);
-///   // ex.message 可以安全地在 toast 中展示
-///
-///   // ex.message is safe to show in a toast
+///   final ex = handler.handle(e);
+///   // ex?.message 可以安全地在 toast 中展示
 /// }
 /// ```
 ///
-/// 这是**唯一的转换点**——所有 BLoC / Repository
-/// 的错误路径都经过此处，保证一致的用户体验。
+/// 这是**唯一的转换点**——所有 BLoC 的错误路径都经过此处，保证一致的
+/// 用户体验。
 ///
 /// Maps raw exceptions into typed [AppException] instances.
+///
+/// This class is instantiable and usually consumed by [BlocErrorHandlerMixin].
+/// Pass a custom [serverMessageExtractor] to the constructor if your backend
+/// uses different response fields; the default tries `message` / `error` /
+/// `errorMsg` / `msg` in order.
 ///
 /// ## Usage
 ///
 /// ```dart
+/// final handler = ErrorHandler();
 /// try {
 ///   await fetchData();
 /// } catch (e, stackTrace) {
-///   final ex = ErrorHandler.handle(e);
-///   // ex.message is safe to show in a toast
+///   final ex = handler.handle(e);
+///   // ex?.message is safe to show in a toast
 /// }
 /// ```
 ///
-/// This is the **single conversion point** — all BLoC / Repository
-/// error paths go through here, guaranteeing consistent UX.
+/// This is the **single conversion point** — all BLoC error paths go through
+/// here, guaranteeing consistent UX.
 class ErrorHandler {
-  ErrorHandler._();
+  /// 创建 [ErrorHandler]。
+  ///
+  /// [serverMessageExtractor] 覆盖默认的服务端消息提取策略。
+  ///
+  /// Creates an [ErrorHandler].
+  ///
+  /// [serverMessageExtractor] overrides the default server-message extraction
+  /// strategy.
+  ErrorHandler({ServerMessageExtractor? serverMessageExtractor})
+      : serverMessageExtractor = serverMessageExtractor ?? ServerMessageExtractor();
+
+  /// 服务端错误消息提取策略（Strategy 模式）。
+  ///
+  /// 默认按 `message` / `error` / `errorMsg` / `msg` 候选顺序取值。
+  /// 若你的后端字段名不同，构造 [ErrorHandler] 时传入自定义实例，或在外部
+  /// 直接替换该字段：
+  ///
+  /// ```dart
+  /// final handler = ErrorHandler();
+  /// handler.serverMessageExtractor.keys = ['msg', 'errorMessage'];
+  /// ```
+  ///
+  /// Server error message extraction strategy (Strategy pattern).
+  ///
+  /// Defaults to trying `message` / `error` / `errorMsg` / `msg` in order.
+  /// Pass a custom instance to the [ErrorHandler] constructor, or replace this
+  /// field directly:
+  ///
+  /// ```dart
+  /// final handler = ErrorHandler();
+  /// handler.serverMessageExtractor.keys = ['msg', 'errorMessage'];
+  /// ```
+  ServerMessageExtractor serverMessageExtractor;
 
   /// 将任意 [error] 转换为类型化的 [AppException]。
   ///
@@ -44,9 +87,9 @@ class ErrorHandler {
   ///
   /// Converts any [error] into a typed [AppException].
   ///
-  /// Returns `null` when the error is a cancelled request (intentional
+  /// Returns `null` when the error was a cancelled request (intentional
   /// abort) and should be silently ignored.
-  static AppException? handle(Object error, [StackTrace? stackTrace]) {
+  AppException? handle(Object error, [StackTrace? stackTrace]) {
     if (error is DioException) {
       return _handleDioException(error);
     }
@@ -55,24 +98,35 @@ class ErrorHandler {
       return error;
     }
 
+    // 非 Dio 异常：不写死文案，交给前端按 code(AppErrorCodes.unknown) 兜底翻译。
+    // Non-Dio exceptions: no hard-coded text; the client localizes via
+    // code (AppErrorCodes.unknown) as a fallback.
     if (error is Exception) {
-      return UnknownException(error.toString(), originalError: error);
+      return UnknownException(
+        null,
+        code: AppErrorCodes.unknown,
+        originalError: error,
+      );
     }
 
-    return UnknownException(error.toString(), originalError: error);
+    return UnknownException(
+      null,
+      code: AppErrorCodes.unknown,
+      originalError: error,
+    );
   }
 
   /// 当错误是主动取消时返回 `true`，此时**不应**弹出 toast 或更新状态。
   ///
   /// Returns `true` when the error was intentionally cancelled and
   /// should **not** trigger a toast or state update.
-  static bool isCancelled(Object error) {
+  bool isCancelled(Object error) {
     return error is DioException && error.type == DioExceptionType.cancel;
   }
 
   // ── Internal helpers ──────────────────────────────────────────────
 
-  static AppException? _handleDioException(DioException error) {
+  AppException? _handleDioException(DioException error) {
     switch (error.type) {
       case DioExceptionType.cancel:
         // 主动取消的请求应静默忽略：返回 null，调用方据此跳过 toast / 状态更新。
@@ -83,9 +137,12 @@ class ErrorHandler {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+        // 不写死文案：连接/发送/接收超时统一按 HTTP 408 兜底翻译。
+        // No hard-coded text: client-side connect/send/receive timeouts are
+        // treated as HTTP 408 (Request Timeout) for localization.
         return TimeoutException(
-          'Connection timed out. Please check your network.',
-          code: 'TIMEOUT',
+          null,
+          code: AppErrorCodes.requestTimeout,
           originalError: error,
         );
 
@@ -93,67 +150,45 @@ class ErrorHandler {
         return _handleBadResponse(error);
 
       case DioExceptionType.connectionError:
+        // 不写死文案：交给前端按 code(AppErrorCodes.noConnection) 兜底翻译。
+        // No hard-coded text: let the client localize via
+        // code (AppErrorCodes.noConnection) as a fallback.
         return NetworkException(
-          'No internet connection. Please check your network.',
+          null,
+          code: AppErrorCodes.noConnection,
           originalError: error,
         );
 
       default:
+        // 不写死文案：交给前端按 code(AppErrorCodes.unknown) 兜底翻译。
+        // No hard-coded text: let the client localize via
+        // code (AppErrorCodes.unknown) as a fallback.
         return UnknownException(
-          error.message ?? 'An unexpected error occurred.',
+          null,
+          code: AppErrorCodes.unknown,
           originalError: error,
         );
     }
   }
 
-  static AppException _handleBadResponse(DioException error) {
+  AppException _handleBadResponse(DioException error) {
     final statusCode = error.response?.statusCode;
-    final code = statusCode?.toString() ?? 'unknown';
+    final int? code = statusCode;
 
-    // 优先使用服务端返回的消息。
-    // Try server-provided message first.
+    // 优先使用服务端返回的消息（字段名不固定，交给可替换的提取策略）。
+    // 服务端未返回可读文案时 message 为 null，由 UI 层按 [code] 在前端本地化。
+    // Prefer the server-provided message (field name is not fixed — delegate to
+    // the swappable extractor). When the server returns no readable text,
+    // message stays null and the UI layer localizes it on the client side via
+    // [code].
     final data = error.response?.data;
-    String message;
+    final String? message = serverMessageExtractor.extract(data);
 
-    if (data is Map<String, dynamic> && data.containsKey('message')) {
-      message = data['message'] as String;
-    } else {
-      message = _statusCodeMessage(statusCode);
-    }
-
-    if (statusCode == 401 || statusCode == 403) {
+    if (statusCode == AppErrorCodes.unauthorized ||
+        statusCode == AppErrorCodes.forbidden) {
       return AuthException(message, code: code, originalError: error);
     }
 
-    if (statusCode != null && statusCode >= 500) {
-      return ServerException(message, code: code, originalError: error);
-    }
-
     return ServerException(message, code: code, originalError: error);
-  }
-
-  static String _statusCodeMessage(int? statusCode) {
-    switch (statusCode) {
-      case 400:
-        return 'Bad request. Please try again.';
-      case 401:
-        return 'Session expired. Please log in again.';
-      case 403:
-        return 'Access denied.';
-      case 404:
-        return 'The requested resource was not found.';
-      case 422:
-        return 'Validation failed. Please check your input.';
-      case 429:
-        return 'Too many requests. Please try again later.';
-      case 500:
-        return 'Internal server error. Please try again later.';
-      case 502:
-        return 'Bad gateway. Please try again later.';
-      case 503:
-        return 'Service unavailable. Please try again later.';
-      default:
-        return 'Server returned an error ($statusCode). Please try again.';
-    }
   }
 }

@@ -1,4 +1,4 @@
-import 'package:{{package_name}}/core/data/base_repository.dart';
+import 'package:{{package_name}}/core/storage/base_repository.dart';
 
 /// {{#pascalCase}}{{name}}{{/pascalCase}} 仓库。
 ///
