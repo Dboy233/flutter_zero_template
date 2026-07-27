@@ -1,7 +1,9 @@
 # flutter_zero_template
 
-Flutter Zero 的**纯模板源仓库**（Mason Brick）。脚手架工具 `fluzer` 读取它，渲染出项目与功能模块骨架。
+> 🌐 [简体中文](README_CN.md) | English
 
-📚 完整文档请访问：**[Flutter Zero 文档站](https://dboy233.github.io/flutter_zero_doc/)**
+The **pure template source repository** for Flutter Zero (Mason Brick). The scaffolding tool `fluzer` reads from it to render project and feature module skeletons.
 
-> 模板变量契约与版本管理规则（MAJOR / MINOR / PATCH 何时 bump）见文档站的「模板版本管理」。
+📚 For full documentation, visit: **[Flutter Zero Docs](https://dboy233.github.io/flutter_zero_doc/)**
+
+> For template variable contracts and versioning rules (when to bump MAJOR / MINOR / PATCH), see the "Template Versioning" page on the documentation site.
