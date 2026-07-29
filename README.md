@@ -1,5 +1,8 @@
 # flutter_zero_template
 
+[![fluzer](https://img.shields.io/pub/v/fluzer.svg?label=fluzer)](https://pub.dev/packages/fluzer)
+[![template](https://img.shields.io/github/v/release/Dboy233/flutter_zero_template.svg?label=template)](https://github.com/Dboy233/flutter_zero_template/releases)
+
 > 🌐 [简体中文](README_CN.md) | English
 
 The **pure template source repository** for Flutter Zero (Mason Brick). The scaffolding tool `fluzer` reads from it to render project and feature module skeletons.
