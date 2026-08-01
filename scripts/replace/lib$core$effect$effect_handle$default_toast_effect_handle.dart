@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:{{name}}/core/localization/context_l10n.dart';
+import 'package:flutter_zero_app/core/localization/context_l10n.dart';
 
 import '../../di/get_it_instance.dart';
 import '../../error/app_error_codes.dart';

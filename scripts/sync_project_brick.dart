@@ -73,6 +73,8 @@ void main(List<String> args) {
     'lib/core/data/models/post_model.freezed.dart',
     'lib/core/data/models/post_model.g.dart',
     'lib/l10n/gen',
+    'README_CN.md',
+    'LICENSE'
   ];
   const excludeSuffixes = <String>[
     '.iml',
