@@ -24,7 +24,7 @@ class SharesRepositories {
     // 示例：取消注释即可启用（user_repository.dart 放在本目录）。
     // Example: uncomment to enable (user_repository.dart lives in this folder).
     // getIt.registerLazySingleton<UserRepository>(
-    //   () => UserRepository(client: getIt<DioClient>()),
+    //   () => UserRepository(dio: getIt<Dio>()),
     // );
   }
 }

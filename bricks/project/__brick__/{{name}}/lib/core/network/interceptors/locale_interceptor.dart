@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 
-import '../localization/locale_provider.dart';
+import '../../localization/locale_provider.dart';
 
 /// 语言环境拦截器。
 ///
 /// 在每次请求的 `onRequest` 中，把当前语言码写入 `Accept-Language` 头，
 /// 让后端据此返回已翻译的错误文案（前端无需自行处理错误国际化）。
 ///
-/// 若后端未返回翻译后的 `message`，则由 [AppException.toToastEffect] 把
-/// [AppException.code] 透传给 [ToastEffect.code]，UI 层按码在前端本地化。
+/// 若后端未返回翻译后的 `message`，则由业务层把异常转换为 [ToastEffect]
+/// （如带 [ToastEffect.l10nCode] 或 [ToastEffect.code]），UI 层按码在前端本地化。
 ///
 /// Locale interceptor.
 ///
@@ -16,9 +16,9 @@ import '../localization/locale_provider.dart';
 /// request so the backend can return already-translated error text (the client
 /// does not need to localize errors itself).
 ///
-/// If the backend returns no translated `message`, [AppException.toToastEffect]
-/// forwards [AppException.code] to [ToastEffect.code] and the UI layer localizes
-/// it on the client side.
+/// If the backend returns no translated `message`, the business layer converts
+/// the exception into a [ToastEffect] (e.g. with [ToastEffect.l10nCode] or
+/// [ToastEffect.code]) and the UI layer localizes it on the client side.
 class LocaleInterceptor extends Interceptor {
   /// 创建 [LocaleInterceptor]。
   ///

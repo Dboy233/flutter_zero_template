@@ -1,27 +1,4 @@
 {
   "appTitle": "Fluzer app",
-
-  "unknownError": "Unknown error",
-  "parseFromJsonError": "Data parsing failed",
-  "parseNullDataError": "Response data is empty",
-  "parseWrongTypeError": "Response data type mismatch",
-  "error400": "Bad request",
-  "error401": "Login expired, please log in again",
-  "error403": "No permission",
-  "error404": "Resource not found",
-  "error405": "Request method not allowed",
-  "error409": "Resource conflict",
-  "error410": "Resource deleted",
-  "error413": "Request payload too large",
-  "error415": "Unsupported media type",
-  "error422": "Request validation failed",
-  "error429": "Too many requests, please try later",
-  "error500": "Server error",
-  "error501": "Feature not implemented",
-  "error502": "Bad gateway",
-  "error503": "Service unavailable",
-  "error504": "Gateway timeout",
-  "unknownErrorCode": "Request failed: {code}",
-  "requestTimeout": "Request timed out. Please check your network.",
-  "noConnection": "No internet connection. Please check your network."
+  "unknownError": "Internal error: {code}"
 }

@@ -1,7 +1,5 @@
 import 'package:meta/meta.dart';
 
-import '../error/app_exception.dart';
-
 /// 一个统一的成功 / 失败 / 取消结果类型。
 ///
 /// 用于把底层异步操作（网络请求、解析等）的三种终态显式化，
@@ -10,11 +8,11 @@ import '../error/app_exception.dart';
 /// ## 用法
 ///
 /// ```dart
-/// final result = await runToResult(() => repository.login(...));
+/// final result = await runCatching(() => repository.login(...));
 ///
 /// result.when(
 ///   success: (user) => emit(state.copyWith(user: user)),
-///   failure: (ex) => emitEffect(ex.toToastEffect()),
+///   failure: (ex) {/* 异常处理 */},
 ///   cancel: () { /* 请求被主动取消，通常什么都不做 */ },
 /// );
 /// ```
@@ -51,14 +49,12 @@ final class Success<T> extends Result<T> {
   String toString() => 'Success($value)';
 }
 
-/// 操作失败，携带已转换为应用层异常的 [AppException]。
-///
-/// Operation failed with an exception already converted to [AppException].
+/// 操作失败，携带异常。
 @immutable
 final class Failure<T> extends Result<T> {
   const Failure(this.exception);
 
-  final AppException exception;
+  final Exception exception;
 
   @override
   bool operator ==(Object other) =>
@@ -109,7 +105,7 @@ extension ResultWhen<T> on Result<T> {
   /// Handles all three result branches.
   R? when<R>({
     required R Function(T value) success,
-    required R Function(AppException ex) failure,
+    required R Function(Exception ex) failure,
     R Function()? cancel,
   }) {
     switch (this) {

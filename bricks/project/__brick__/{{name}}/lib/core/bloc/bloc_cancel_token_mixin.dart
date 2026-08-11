@@ -36,8 +36,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///       emit(...);
 ///     } catch (e) {
 ///       if (isCancelled(e)) return; // silent, no Dio import needed
-///       final ex = handleError(e);
-///       if (ex != null) emitEffect(ex.toToastEffect());
+///       final ex = e is Exception ? e : Exception(e.toString());
+///       emitEffect(ex.toToastEffect());
 ///     }
 ///   }
 ///
@@ -96,8 +96,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 ///       emit(...);
 ///     } catch (e) {
 ///       if (isCancelled(e)) return; // silent, no Dio import needed
-///       final ex = handleError(e);
-///       if (ex != null) emitEffect(ex.toToastEffect());
+///       final ex = e is Exception ? e : Exception(e.toString());
+///       emitEffect(ex.toToastEffect());
 ///     }
 ///   }
 ///

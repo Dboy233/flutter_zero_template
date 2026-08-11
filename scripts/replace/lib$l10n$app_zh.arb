@@ -1,27 +1,4 @@
 {
   "appTitle": "Fluzer app",
-
-  "unknownError": "未知错误",
-  "parseFromJsonError": "数据解析失败",
-  "parseNullDataError": "响应数据为空",
-  "parseWrongTypeError": "响应数据类型不匹配",
-  "error400": "请求参数有误",
-  "error401": "登录已过期，请重新登录",
-  "error403": "无权限访问",
-  "error404": "资源不存在",
-  "error405": "请求方法不支持",
-  "error409": "资源冲突",
-  "error410": "资源已删除",
-  "error413": "请求内容过大",
-  "error415": "媒体类型不支持",
-  "error422": "请求校验失败",
-  "error429": "请求过于频繁，请稍后再试",
-  "error500": "服务器错误",
-  "error501": "功能未实现",
-  "error502": "网关错误",
-  "error503": "服务暂不可用",
-  "error504": "网关超时",
-  "unknownErrorCode": "请求出错：{code}",
-  "noConnection": "网络连接失败，请检查网络",
-  "requestTimeout": "请求超时，请检查网络"
+  "unknownError": "内部错误：{code}"
 }

@@ -56,11 +56,11 @@ final class ToastEffect extends UIEffect {
   /// according to the project's i18n setup.
   final String? l10nCode;
 
-  /// 网络请求内部错误码（HTTP 状态码或 [AppErrorCodes] 内部哨兵码）。
+  /// 网络请求内部错误码（HTTP 状态码或自定义哨兵码）。
   /// UI 层据此映射兜底文案。
   ///
-  /// Internal network error code (HTTP status or internal sentinel from
-  /// [AppErrorCodes]). The UI layer maps it to a fallback text.
+  /// Internal network error code (HTTP status or custom sentinel).
+  /// The UI layer maps it to a fallback text.
   final int? code;
 
   /// 额外参数。
@@ -161,3 +161,37 @@ final class LoadingEffect extends UIEffect {
 // 4. Emit the new effect in a BLoC via `emitEffect(XxxEffect(...))`
 //    (through [BlocEffectMixin.effectStream]).
 // 5. [BlocEffectMixin] and [EffectListener] do not need to be changed.
+
+/// 把普通异常转换为一次性 Toast 副作用的便捷扩展。
+///
+/// 约定：用 `Exception('message')` 抛出的异常，[errorMessage] 取引号内的文案；
+/// 框架不做任何业务 / 类型假设——需要自定义本地化（[ToastEffect.l10nCode]）
+/// 或错误码（[ToastEffect.code]）时，业务层可自行构造 [ToastEffect]，
+/// 或定义携带 [errorMessage] 的自定义异常类型交给上层处理。
+///
+/// Convenience extension that turns a plain exception into a one-shot
+/// [ToastEffect]. The contract: exceptions thrown as `Exception('message')`
+/// expose their text via [errorMessage]; the framework makes no business or
+/// type assumption. For custom localization ([ToastEffect.l10nCode]) or error
+/// codes ([ToastEffect.code]), build the [ToastEffect] yourself or define a
+/// custom exception type that exposes [errorMessage].
+extension ExceptionToToast on Exception {
+  /// 用于展示的文案。`Exception('msg')` 取 `msg`；无文案返回 `null`。
+  ///
+  /// Display text. `Exception('msg')` yields `msg`; returns `null` when there
+  /// is nothing meaningful to show.
+  String? get errorMessage {
+    final s = toString();
+    const prefix = 'Exception: ';
+    final body =
+        s.startsWith(prefix) ? s.substring(prefix.length).trim() : s.trim();
+    // 裸 `Exception()` 的 toString 为 'Exception'，视为无文案，走兜底。
+    if (body.isEmpty || body == 'Exception') return null;
+    return body;
+  }
+
+  /// 由异常生成 [ToastEffect]。
+  ///
+  /// Builds a [ToastEffect] from this exception.
+  ToastEffect toToastEffect() => ToastEffect(message: errorMessage);
+}

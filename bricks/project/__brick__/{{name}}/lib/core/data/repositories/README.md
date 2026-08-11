@@ -1,24 +1,19 @@
-# 共享仓库（Shared Repositories）
+# 共享仓库（Shares Repositories）
 
-跨多个 feature 共享的数据仓库放在本目录。
+当某个 Repository 被 **2 个及以上 feature** 共用时，把它放到本目录
+（`lib/core/data/repositories/`），再到 `lib/core/data/shares_repositories.dart`
+的 `register` 中登记为 `lazySingleton`。
 
-- **何时上移**：某仓库被 2 个及以上 feature 调用时，从 `features/<name>/data/repositories/` 提到这里（解决「settings 想用 user 数据」的正确方式，而不是 import user feature 源码）。仅单 feature 使用的仓库留在原处。
-- **约定**：继承 `BaseRepository`（`core/storage/base_repository.dart`），复用 `parseList` / `parseSingle` / `parseResponse`；文件名 `lower_snake_case` 以 `_repository` 结尾。
-- **DI 注册**：在本目录写好仓库类后，到 `core/data/shares_repositories.dart` 的 `register` 中登记为 `lazySingleton`。`SharesRepositories.register(getIt)` 已在 `injection_base.dart` 的 `registerFeatureModules` 中调用，启动即生效。调用方通过 `getIt<XxxRepository>()` 取用，无需互引 feature。
+## 约定
 
-示例（注册见 `shares_repositories.dart`）：
+- **源码位置**：本目录（如 `user_repository.dart`）。
+- **DI 注册**：在 `SharesRepositories.register(GetIt)` 中登记。
+  `SharesRepositories.register(getIt)` 已在 `InjectionBase.registerFeatureModules`
+  （`lib/core/di/injection_base.dart`）中调用，启动即生效。
+- **取用**：调用方通过 `getIt<XxxRepository>()` 获取，无需互相 import feature。
 
-```dart
-class UserRepository extends BaseRepository {
-  const UserRepository({required super.client});
+## 与 feature 自有仓库的区别
 
-  Future<UserModel> fetchCurrentUser({CancelToken? cancelToken}) async {
-    final response = await client.get<Map<String, dynamic>>(
-      ApiConstants.currentUser,
-      cancelToken: cancelToken,
-    );
-    return parseSingle(response, UserModel.fromJson) ??
-        (throw const ParseException('user not found'));
-  }
-}
-```
+- feature 自有仓库：放在 `features/<name>/data/repositories/`，由各自的
+  `<Name>Module.register(getIt)` 注册。
+- 跨 feature 共享仓库：放在本目录，由 `SharesRepositories` 集中注册。

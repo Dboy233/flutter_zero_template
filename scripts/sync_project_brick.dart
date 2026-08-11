@@ -65,16 +65,11 @@ void main(List<String> args) {
     'windows',
     '.flutter-plugins-dependencies',
     'lib/features/home',
-    'lib/features/counter',
-    'lib/features/login',
-    'lib/features/search',
     'lib/features/settings',
-    'lib/core/data/models/post_model.dart',
-    'lib/core/data/models/post_model.freezed.dart',
-    'lib/core/data/models/post_model.g.dart',
     'lib/l10n/gen',
     'README_CN.md',
-    'LICENSE'
+    'LICENSE',
+    'CHANGELOG_CN.md'
   ];
   const excludeSuffixes = <String>[
     '.iml',

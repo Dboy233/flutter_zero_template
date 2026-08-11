@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../auth/token_storage.dart';
-import '../error/app_error_codes.dart';
+import '../../auth/token_storage.dart';
 
 /// 认证令牌拦截器。
 ///
@@ -21,7 +20,7 @@ import '../error/app_error_codes.dart';
 /// ## 注册方式
 ///
 /// ```dart
-/// // 在 DioClient 初始化时添加到 dio 实例
+/// // 在 Dio 初始化时添加到 dio 实例
 /// dio.interceptors.add(AuthInterceptor(tokenStorage: tokenStorage));
 /// ```
 ///
@@ -89,18 +88,31 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    // 状态码错误默认由 Dio 以 DioException 形式抛出（未放宽 validateStatus），
+    // 在 [onError] 中统一处理；此处无需特殊逻辑。
+    // Status-code errors are thrown by Dio as DioException (validateStatus
+    // is at its default), so they are handled in [onError]; nothing to do here.
+    handler.next(response);
+  }
+
+  @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // 仅处理 401：token 已失效，必须清理并引导重新登录。
-    // 403 表示权限不足，不一定需要清除 token；
-    // 业务方如需统一处理，可在 [onUnauthorized] 中根据具体错误码决定。
-    // Only handle 401: the token is no longer valid, so clear it and let
-    // the caller redirect to login. 403 means insufficient permission and
-    // does not necessarily require clearing the token; business logic can
-    // handle it in [onUnauthorized] if needed.
-    if (err.response?.statusCode == AppErrorCodes.unauthorized) {
+    // 401 表示 token 已失效，必须清理并引导重新登录。
+    // 403 表示权限不足，不一定需要清除 token；业务方如需统一处理，
+    // 可在 [onUnauthorized] 中根据具体错误码决定。
+    // A 401 means the token is no longer valid, so clear it and let the
+    // caller redirect to login. 403 means insufficient permission and does
+    // not necessarily require clearing the token; business logic can handle
+    // it in [onUnauthorized] if needed.
+    if (err.response?.statusCode == 401) {
       unawaited(tokenStorage.clearToken());
       onUnauthorized?.call();
     }
+
     handler.next(err);
   }
 }
