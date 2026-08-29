@@ -4,8 +4,8 @@
 
 ## 职责
 
-- 封装具体的外部读写细节：HTTP 请求（基于 `DioClient`）、本地数据库、SharedPreferences、平台通道等。
-- 将原始响应转换为本功能的数据模型（`../models` 中的 DTO），或在失败时抛出 `AppException` 交由上层处理。
+- 封装具体的外部读写细节：HTTP 请求（基于 `Dio`）、本地数据库、SharedPreferences、平台通道等。
+- 将原始响应转换为本功能的数据模型（`../models` 中的 DTO），或在失败时抛出 `Exception`（框架不做归一化，由上层 BLoC 处理）。
 - 只做"取数"，不包含业务规则、状态管理或 UI 逻辑。
 
 ## 存放内容

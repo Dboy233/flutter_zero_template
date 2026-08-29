@@ -24,6 +24,14 @@ analyzer:
     # 不强制 80 字符行宽限制，允许更长行
     # Don't enforce 80-char line length limit
     lines_longer_than_80_chars: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:
