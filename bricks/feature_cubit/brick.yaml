@@ -1,0 +1,16 @@
+name: feature_cubit
+description: 生成 MVVM 功能模块
+version: 1.0.0
+
+environment:
+  mason: ^0.1.2
+
+vars:
+  name:
+    type: string
+    description: 模块小写下划线名称，如 user_setting
+    prompt: 请输入模块名称
+  package_name:
+    type: string
+    description: flutter包名/项目名。
+    prompt: 请输入flutter包名/项目名。

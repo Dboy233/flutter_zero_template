@@ -19,6 +19,10 @@
       "minCliVersion": "2.0.0",
       "version": "3.0.0",
       "url": "https://github.com/Dboy233/flutter_zero_template/releases/download/3.0.0/bricks.zip"
+    },
+    {
+      "version": "3.1.0",
+      "url": "https://github.com/Dboy233/flutter_zero_template/releases/download/3.1.0/bricks.zip"
     }
   ]
 }

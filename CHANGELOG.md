@@ -4,6 +4,16 @@
 
 > 模板版本与 CLI 版本独立发布、互不绑定；二者之间的版本约束关系见文档「版本约束规则」（`flutter_zero_doc/docs/zh/versioning-rules.md`）。
 
+## [3.1.0] - 2026-08-30
+
+### Added
+- 新增 `feature_bloc` Mason brick，生成基于 BLoC（事件 + 状态）的 MVI 功能模块骨架，与原 `feature` brick 目录结构一致。
+- 新增 `feature_cubit` Mason brick，生成基于 Cubit 的 MVVM 功能模块骨架（以 `presentation/cubit/` 取代 `presentation/bloc/`，无事件、直接调用方法）。
+
+### Changed
+- `feature` brick 页面重构：`{{name}}_page.dart` 与 `{{name}}_body.dart` 改为 `part of` 关联，`_Body` 设为私有类，统一三个 feature 系列 brick 的代码组织风格。
+- `project` brick 的 `pubspec.yaml` 新增 `easy_refresh: ^3.5.1` 依赖，使生成项目开箱即可使用下拉刷新 / 上滑加载骨架。
+
 ## [3.0.0] - 2026-08-29
 
 ### Changed

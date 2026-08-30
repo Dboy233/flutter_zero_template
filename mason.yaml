@@ -3,3 +3,7 @@ bricks:
     path: "bricks\\feature"
   project:
     path: "bricks\\project"
+  feature_cubit:
+    path: "bricks\\feature_cubit"
+  feature_bloc:
+    path: "bricks\\feature_bloc"

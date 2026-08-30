@@ -65,6 +65,8 @@ void main(List<String> args) {
     'windows',
     '.flutter-plugins-dependencies',
     'lib/features/home',
+    'lib/features/mvi_demo',
+    'lib/features/mvvm_demo',
     'lib/features/settings',
     'lib/l10n/gen',
     'README_CN.md',
