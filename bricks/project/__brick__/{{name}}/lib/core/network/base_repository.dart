@@ -16,7 +16,7 @@ import 'package:dio/dio.dart';
 /// checks, and throws no exceptions — all of that is the responsibility of
 /// each concrete repository's public methods.
 abstract class BaseRepository {
-  const BaseRepository({required this.dio});
+  const new({required this.dio});
 
   /// 当前仓库持有的 Dio 实例。
   final Dio dio;

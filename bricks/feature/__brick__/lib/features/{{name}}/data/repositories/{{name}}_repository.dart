@@ -7,6 +7,6 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Repository extends BaseRepository {
   /// 创建仓库。
   ///
   /// Creates the repository.
-  const {{#pascalCase}}{{name}}{{/pascalCase}}Repository({required super.dio});
+  const new({required super.dio});
 
 }

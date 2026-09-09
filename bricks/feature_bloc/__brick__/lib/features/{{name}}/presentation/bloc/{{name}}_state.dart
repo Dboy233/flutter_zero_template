@@ -8,6 +8,8 @@ abstract class {{#pascalCase}}{{name}}{{/pascalCase}}State with _${{#pascalCase}
   /// 创建初始状态。
   ///
   /// Initial state.
-  const factory {{#pascalCase}}{{name}}{{/pascalCase}}State() =
-      _{{#pascalCase}}{{name}}{{/pascalCase}}State;
+  const factory(/*{
+    String? name,
+    Default(0) int age,
+  }*/) = _{{#pascalCase}}{{name}}{{/pascalCase}}State;
 }

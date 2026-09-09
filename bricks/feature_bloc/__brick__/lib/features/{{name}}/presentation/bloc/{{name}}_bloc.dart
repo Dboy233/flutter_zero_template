@@ -21,7 +21,7 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Bloc extends Bloc<{{#pascalCase}}{{n
   /// 创建 BLoC。
   ///
   /// Creates the BLoC.
-  {{#pascalCase}}{{name}}{{/pascalCase}}Bloc({
+  new({
     required this.repository,
   }) : super(const {{#pascalCase}}{{name}}{{/pascalCase}}State());
 

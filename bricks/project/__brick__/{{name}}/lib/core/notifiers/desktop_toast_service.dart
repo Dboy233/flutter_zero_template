@@ -57,5 +57,5 @@ abstract class DeskTopToastService extends ToastService {
   /// 创建桌面端 toast 服务。
   ///
   /// Creates a desktop-style toast service.
-  DeskTopToastService();
+  new();
 }

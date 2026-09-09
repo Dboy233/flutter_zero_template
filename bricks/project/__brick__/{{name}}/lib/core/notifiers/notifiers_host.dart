@@ -72,7 +72,7 @@ class NotifiersHost extends StatefulWidget {
   /// 创建统一通知宿主组件。
   ///
   /// Creates a unified notifiers host widget.
-  const NotifiersHost({
+  const new({
     required this.child,
     super.key,
     this.toasts = const [],

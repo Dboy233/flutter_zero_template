@@ -51,7 +51,7 @@ class TokenStorage extends ChangeNotifier {
   /// Creates a [TokenStorage].
   ///
   /// [_secureStorage] persists tokens with encryption.
-  TokenStorage({required this._secureStorage});
+  new({required this._secureStorage});
 
   /// 持久化存储代理（安全存储）。
   ///

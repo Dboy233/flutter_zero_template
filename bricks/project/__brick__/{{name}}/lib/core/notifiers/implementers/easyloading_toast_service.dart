@@ -28,7 +28,7 @@ class EasyLoadingToastService extends ToastService {
   /// 创建基于 EasyLoading 的 toast 服务。
   ///
   /// Creates an EasyLoading-based toast service.
-  EasyLoadingToastService();
+  new();
 
   @override
   Widget build(BuildContext context, Widget child) {

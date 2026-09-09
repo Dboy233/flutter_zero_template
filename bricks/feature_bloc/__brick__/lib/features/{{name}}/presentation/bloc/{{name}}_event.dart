@@ -6,5 +6,5 @@ part of '{{name}}_bloc.dart';
 @freezed
 abstract class {{#pascalCase}}{{name}}{{/pascalCase}}Event with _${{#pascalCase}}{{name}}{{/pascalCase}}Event {
   /// 编写你的事件：
-  /// const factory {{#pascalCase}}{{name}}{{/pascalCase}}Event.add() = {{#pascalCase}}{{name}}{{/pascalCase}}Add;
+  /// const factory add() = {{#pascalCase}}{{name}}{{/pascalCase}}Add;
 }

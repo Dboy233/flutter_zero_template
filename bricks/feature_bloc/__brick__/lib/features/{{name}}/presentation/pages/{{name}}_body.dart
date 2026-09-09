@@ -7,7 +7,7 @@ class _{{#pascalCase}}{{name}}{{/pascalCase}}Body extends StatelessWidget {
   /// 创建页面内容。
   ///
   /// Creates the page body.
-  const _{{#pascalCase}}{{name}}{{/pascalCase}}Body();
+  const new();
 
   @override
   Widget build(BuildContext context) {

@@ -75,6 +75,7 @@ void main(List<String> args) {
   ];
   const excludeSuffixes = <String>[
     '.iml',
+    '.flutter_tool_state'
     // 需要排除的二进制或无关文件后缀可在此追加，例如：
     // '.png', '.jpg', '.g.dart', '.freezed.dart', '.keystore',
   ];

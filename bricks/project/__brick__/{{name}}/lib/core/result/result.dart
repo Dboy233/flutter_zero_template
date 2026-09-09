@@ -23,7 +23,7 @@ import 'package:meta/meta.dart';
 /// (network request, parsing, etc.) explicit, so BLoCs do not need to
 /// repeat `try / catch / if-cancelled` boilerplate.
 sealed class Result<T> {
-  const Result();
+  const new();
 }
 
 /// 操作成功，携带返回值。
@@ -31,7 +31,7 @@ sealed class Result<T> {
 /// Operation succeeded with a returned value.
 @immutable
 final class Success<T> extends Result<T> {
-  const Success(this.value);
+  const new(this.value);
 
   final T value;
 
@@ -52,7 +52,7 @@ final class Success<T> extends Result<T> {
 /// 操作失败，携带异常。
 @immutable
 final class Failure<T> extends Result<T> {
-  const Failure(this.exception);
+  const new(this.exception);
 
   final Exception exception;
 
@@ -82,7 +82,7 @@ final class Failure<T> extends Result<T> {
 /// first-class outcome.
 @immutable
 final class Cancel<T> extends Result<T> {
-  const Cancel();
+  const new();
 
   @override
   bool operator ==(Object other) =>

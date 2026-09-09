@@ -11,21 +11,21 @@ enum ToastEventType { error, success, info, warning, dismiss }
 ///
 /// Toast event data carried by the internal pipeline.
 class ToastEvent {
-  const ToastEvent._({required this.type, this.message});
+  const new _({required this.type, this.message});
 
-  const ToastEvent.error(String msg)
+  const new error(String msg)
     : this._(type: ToastEventType.error, message: msg);
 
-  const ToastEvent.success(String msg)
+  const new success(String msg)
     : this._(type: ToastEventType.success, message: msg);
 
-  const ToastEvent.info(String msg)
+  const new info(String msg)
     : this._(type: ToastEventType.info, message: msg);
 
-  const ToastEvent.warning(String msg)
+  const new warning(String msg)
     : this._(type: ToastEventType.warning, message: msg);
 
-  const ToastEvent.dismiss() : this._(type: ToastEventType.dismiss);
+  const new dismiss() : this._(type: ToastEventType.dismiss);
 
   final ToastEventType type;
   final String? message;
@@ -91,7 +91,7 @@ abstract class ToastService {
   /// 创建带内部事件管道的 toast 服务。
   ///
   /// Creates a toast service with its own internal event pipeline.
-  ToastService();
+  new();
 
   final StreamController<ToastEvent> _effects =
       StreamController<ToastEvent>.broadcast();

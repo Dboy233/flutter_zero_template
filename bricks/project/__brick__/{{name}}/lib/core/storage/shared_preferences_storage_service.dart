@@ -59,7 +59,7 @@ class SharedPreferencesStorageService extends StorageService {
   ///
   /// [prefs] must be a ready [SharedPreferences] instance,
   /// obtained via `SharedPreferences.getInstance()`.
-  SharedPreferencesStorageService(this._prefs);
+  new(this._prefs);
 
   /// 被代理的真实对象。
   ///

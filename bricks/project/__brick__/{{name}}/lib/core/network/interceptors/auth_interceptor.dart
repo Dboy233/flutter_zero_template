@@ -64,7 +64,7 @@ class AuthInterceptor extends Interceptor {
   /// [tokenStorage] provides synchronous in-memory token reads and
   /// async clear. [onUnauthorized] is called on 401 (e.g. to navigate
   /// to the login screen).
-  AuthInterceptor({required this.tokenStorage, this.onUnauthorized});
+  new({required this.tokenStorage, this.onUnauthorized});
 
   /// Token 生命周期管理器。
   ///

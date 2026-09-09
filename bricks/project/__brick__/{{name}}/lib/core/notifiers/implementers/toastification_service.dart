@@ -29,7 +29,7 @@ class ToastificationToastService extends DeskTopToastService {
   /// 创建基于 toastification 的 toast 服务。
   ///
   /// Creates a toastification-based toast service.
-  ToastificationToastService();
+  new();
 
   @override
   Widget build(BuildContext context, Widget child) {

@@ -8,7 +8,7 @@
 /// This file holds values that are reused across the app, such as
 /// timeouts, default page sizes, and feature flags.
 class AppConstants {
-  AppConstants._();
+  new _();
 
   /// 网络请求连接超时的默认时长。
   ///

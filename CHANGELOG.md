@@ -4,6 +4,21 @@
 
 > 模板版本与 CLI 版本独立发布、互不绑定；二者之间的版本约束关系见文档「版本约束规则」（`flutter_zero_doc/docs/zh/versioning-rules.md`）。
 
+## [4.0.0] - 2026-09-09
+
+### Added
+- `template_registry.json` 新增 `4.0.0` 条目，供 `fluzer` 拉取新版模板。
+- `project` brick 的 `pubspec.yaml` 新增 `dependency_overrides` 注释模板与 `assets` / `fonts` 注释模板，便于按需启用。
+
+### Changed
+- **核心操作等待机制对齐**：`lib/core/bloc/bloc_await_mixin.dart` 整体重构为「事件即身份 + `AwaitResolution<T>` 密封类」架构（与 3.0.0 文档描述的语义一致）。`runAwait<E>(event)` 返回 `Future<AwaitResolution<State>>`，等待结局由 `AwaitCompleted` / `AwaitErrored` / `AwaitDropped` / `AwaitCancelled` 密封子类表征，调用端以 `switch` / `is` 收窄判断，不再依赖异常。
+- **Dart 3.13 主构造语法迁移**：`project` 与三个 feature 系列 brick（`feature` / `feature_bloc` / `feature_cubit`）中所有默认构造函数改为 `new` 主构造写法（BLoC / Cubit / Page / Body / Repository / Module / App 根组件等）。
+- **模板状态与模块骨架调整**：feature 系列 brick 的 freezed 状态默认工厂改为 `const factory() = _XxxState;` 形式；模块私有构造函数由 `XxxModule._()` 改为 `new _()`，与 `flutter_zero_app` 验证项目保持一致。
+- **依赖与 SDK 升级**：`pubspec.yaml` 的 SDK 最低版本 `^3.12.2` → `^3.13.0`；`freezed` `^3.2.5` → `^4.0.1`、`very_good_analysis` `^10.3.0` → `^11.0.0`、`flutter_secure_storage` `^10.3.1` → `^11.0.0`、`flutter_easyloading` `^3.0.5` → `^4.0.2`、`go_router` `^17.3.0` → `^18.0.1`；新增显式 `bloc`、`test` 依赖；`pubspec` 依赖按层分组并补充分组注释。
+- **静态分析调整**：`analysis_options.yaml` 新增 `sort_pub_dependencies: ignore`（依赖按层分组、非字母序）。
+- **核心模块同步**：`effect` / `result` / `notifiers` / `theme` / `network` / `storage` 等核心实现同步至最新版本并采用 Dart 3.13 写法。
+- `fluzer.yaml` 模板版本号 `3.0.0` → `4.0.0`。
+
 ## [3.1.0] - 2026-08-30
 
 ### Added

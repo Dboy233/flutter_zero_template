@@ -33,7 +33,7 @@ class AppScrollBehavior extends MaterialScrollBehavior {
   ///
   /// Use the `const` constructor to avoid creating a new instance
   /// on every rebuild.
-  const AppScrollBehavior();
+  const new();
 
   @override
   Set<PointerDeviceKind> get dragDevices => <PointerDeviceKind>{

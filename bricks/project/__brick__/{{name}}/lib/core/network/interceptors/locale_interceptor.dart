@@ -26,7 +26,7 @@ class LocaleInterceptor extends Interceptor {
   ///
   /// Creates a [LocaleInterceptor]. [localeProvider] supplies the language code
   /// without a [BuildContext].
-  LocaleInterceptor({required this.localeProvider});
+  new({required this.localeProvider});
 
   /// 语言环境来源。
   ///

@@ -16,7 +16,7 @@
 /// or declaring the subclass in the same library. Chain handlers claim only
 /// the types they care about via `is` checks, so they never interfere.
 abstract class UIEffect {
-  const UIEffect();
+  const new();
 }
 
 /// Toast 提示副作用。
@@ -38,12 +38,7 @@ abstract class UIEffect {
 /// 3. [code]: an internal network error code (HTTP status or sentinel),
 ///    mapped by the UI layer to a fallback text (e.g. "Request failed: 404").
 final class ToastEffect extends UIEffect {
-  const ToastEffect({
-    this.message,
-    this.l10nCode,
-    this.code,
-    this.extra,
-  });
+  const new({this.message, this.l10nCode, this.code, this.extra});
 
   /// 可直接显示的文本。
   ///
@@ -88,10 +83,7 @@ final class ToastEffect extends UIEffect {
 /// handler, so effects are never silently dropped; the real, product-specific
 /// dialog should be rendered by a business handler.
 final class DialogEffect extends UIEffect {
-  const DialogEffect({
-    required this.type,
-    this.extra,
-  });
+  const new({required this.type, this.extra});
 
   /// 对话框业务类型标识，例如 `retry`、`refresh_success`。
   ///
@@ -125,7 +117,7 @@ final class DialogEffect extends UIEffect {
 /// string, pass it via [extra] (must be a [String]); the default handler
 /// forwards it to [LoadingService.show].
 final class LoadingEffect extends UIEffect {
-  const LoadingEffect({required this.show, this.extra});
+  const new({required this.show, this.extra});
 
   /// 为 `true` 显示加载指示器，`false` 隐藏。
   /// `true` shows the indicator, `false` hides it.
@@ -183,8 +175,9 @@ extension ExceptionToToast on Exception {
   String? get errorMessage {
     final s = toString();
     const prefix = 'Exception: ';
-    final body =
-        s.startsWith(prefix) ? s.substring(prefix.length).trim() : s.trim();
+    final body = s.startsWith(prefix)
+        ? s.substring(prefix.length).trim()
+        : s.trim();
     // 裸 `Exception()` 的 toString 为 'Exception'，视为无文案，走兜底。
     if (body.isEmpty || body == 'Exception') return null;
     return body;

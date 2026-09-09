@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 /// Centralize route strings so they can be reused for navigation
 /// without hard-coding literals in widgets.
 class AppRoutes {
-  AppRoutes._();
+  new _();
 
   /// 首页路由。
   ///
@@ -31,7 +31,7 @@ class AppRoutes {
 /// Routes only handle navigation — [BlocProvider] is placed
 /// inside each Page widget, keeping routes lightweight.
 class AppRouter {
-  AppRouter._();
+  new _();
 
   /// 共享的 [GoRouter] 实例。
   ///

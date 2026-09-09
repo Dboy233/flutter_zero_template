@@ -71,7 +71,7 @@ class App extends StatelessWidget {
   ///
   ///
   /// Creates the root app widget.
-  const App({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

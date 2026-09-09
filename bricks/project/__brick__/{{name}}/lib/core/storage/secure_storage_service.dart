@@ -49,7 +49,7 @@ class SecureStorageService extends StorageService {
   ///
   /// [storage] is optional — pass a custom instance for testing;
   /// defaults to [FlutterSecureStorage].
-  SecureStorageService({FlutterSecureStorage? storage})
+  new({FlutterSecureStorage? storage})
     : _storage = storage ?? const FlutterSecureStorage();
 
   /// 被代理的真实对象。

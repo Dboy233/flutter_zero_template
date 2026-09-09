@@ -7,7 +7,7 @@ import 'package:{{package_name}}/features/{{name}}/data/repositories/{{name}}_re
 ///
 /// {{#pascalCase}}{{name}}{{/pascalCase}} module dependency registration.
 class {{#pascalCase}}{{name}}{{/pascalCase}}Module {
-  {{#pascalCase}}{{name}}{{/pascalCase}}Module._();
+  new _();
 
   /// 注册模块依赖。
   ///

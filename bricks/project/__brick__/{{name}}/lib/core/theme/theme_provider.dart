@@ -46,7 +46,7 @@ class ThemeProvider extends ChangeNotifier {
   ///
   /// Initial mode is [ThemeMode.system]; call [restoreFromStorage]
   /// to restore the user's saved preference.
-  ThemeProvider({required this._storage});
+  new({required this._storage});
 
   /// 主题偏好存储 key。
   ///

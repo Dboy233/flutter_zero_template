@@ -12,12 +12,10 @@ import 'package:logger/logger.dart';
 /// [Log.e] for errors. The logger is configured with pretty printing
 /// and a truncated stack trace suitable for Flutter development.
 class Log {
-  Log._();
+  new _();
 
   static final Logger _logger = Logger(
-    printer: PrettyPrinter(
-      dateTimeFormat: DateTimeFormat.dateAndTime,
-    ),
+    printer: PrettyPrinter(dateTimeFormat: DateTimeFormat.dateAndTime),
   );
 
   /// 输出调试日志。

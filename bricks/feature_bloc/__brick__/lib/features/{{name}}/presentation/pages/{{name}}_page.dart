@@ -15,7 +15,7 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Page extends StatelessWidget {
   /// 创建页面。
   ///
   /// Creates the page.
-  const {{#pascalCase}}{{name}}{{/pascalCase}}Page({super.key, this.bloc});
+  const new({super.key, this.bloc});
 
   /// 仅用于测试注入的 BLoC。生产代码应始终使用 `getIt<{{#pascalCase}}{{name}}{{/pascalCase}}Repository>()` 创建。
   ///

@@ -20,7 +20,7 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Cubit extends Cubit<{{#pascalCase}}{
   /// 创建 Cubit。
   ///
   /// Creates the Cubit.
-  {{#pascalCase}}{{name}}{{/pascalCase}}Cubit({
+  new({
     required this.repository,
   }) : super(const {{#pascalCase}}{{name}}{{/pascalCase}}State());
 

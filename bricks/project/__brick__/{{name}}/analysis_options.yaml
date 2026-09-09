@@ -24,6 +24,10 @@ analyzer:
     # 不强制 80 字符行宽限制，允许更长行
     # Don't enforce 80-char line length limit
     lines_longer_than_80_chars: ignore
+
+    # pubspec 依赖按「层」分组并加组注释（非字母序），故忽略排序检查
+    # Dependencies are grouped by layer (not alphabetical) with section comments
+    sort_pub_dependencies: ignore
   exclude:
     - build/**
     - android/**

@@ -23,6 +23,10 @@
     {
       "version": "3.1.0",
       "url": "https://github.com/Dboy233/flutter_zero_template/releases/download/3.1.0/bricks.zip"
+    },
+    {
+      "version": "4.0.0",
+      "url": "https://github.com/Dboy233/flutter_zero_template/releases/download/4.0.0/bricks.zip"
     }
   ]
 }

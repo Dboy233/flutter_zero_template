@@ -19,14 +19,14 @@ enum LoadingEventType {
 ///
 /// Loading event data carried by the internal pipeline.
 class LoadingEvent {
-  const LoadingEvent._({required this.type, this.status});
+  const new _({required this.type, this.status});
 
   /// show event
-  const LoadingEvent.show({String? status})
+  const new show({String? status})
     : this._(type: LoadingEventType.show, status: status);
 
   /// dismiss event
-  const LoadingEvent.dismiss() : this._(type: LoadingEventType.dismiss);
+  const new dismiss() : this._(type: LoadingEventType.dismiss);
 
   final LoadingEventType type;
   final String? status;
@@ -65,7 +65,7 @@ abstract class LoadingService {
   /// 创建带内部事件管道的 loading 服务。
   ///
   /// Creates a loading service with its own internal event pipeline.
-  LoadingService();
+  new();
 
   final StreamController<LoadingEvent> _events =
       StreamController<LoadingEvent>.broadcast();

@@ -47,7 +47,7 @@ class LocaleProvider extends ChangeNotifier {
   ///
   /// Initial locale is [AppLocales.zh]; call [restoreFromStorage]
   /// to restore the user's saved preference.
-  LocaleProvider({required this._storage});
+  new({required this._storage});
 
   /// 语言偏好存储 key。
   ///

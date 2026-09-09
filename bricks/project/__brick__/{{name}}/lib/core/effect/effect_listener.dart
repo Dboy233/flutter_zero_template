@@ -15,7 +15,7 @@ class EffectListener<B extends BlocBase<S>, S> extends StatelessWidget {
   /// 创建副作用监听组件。
   ///
   /// Creates the effect-listening widget.
-  const EffectListener({
+  const new({
     required this.child,
     this.effectsHandles = const [],
     super.key,
@@ -60,7 +60,7 @@ class EffectListener<B extends BlocBase<S>, S> extends StatelessWidget {
 }
 
 class _EffectStreamListener<S> extends StatefulWidget {
-  const _EffectStreamListener({
+  const new({
     required this.bloc,
     required this.effectsHandles,
     required this.child,

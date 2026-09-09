@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 /// colors and component defaults. Use [AppTheme.lightTheme] and
 /// [AppTheme.darkTheme] in [MaterialApp].
 class AppTheme {
-  AppTheme._();
+  new _();
 
   /// 用于生成配色方案的种子颜色。
   ///
@@ -27,9 +27,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: _seedColor,
-      ),
+      colorScheme: ColorScheme.fromSeed(seedColor: _seedColor),
       appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
       cardTheme: CardThemeData(
         elevation: 1,

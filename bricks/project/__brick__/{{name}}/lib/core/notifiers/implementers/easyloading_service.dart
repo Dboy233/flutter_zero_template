@@ -25,7 +25,7 @@ class EasyLoadingLoadingService extends LoadingService {
   /// 创建基于 EasyLoading 的 loading 服务。
   ///
   /// Creates an EasyLoading-based loading service.
-  EasyLoadingLoadingService();
+  new();
 
   @override
   Widget build(BuildContext context, Widget child) {

@@ -15,7 +15,7 @@ class {{#pascalCase}}{{name}}{{/pascalCase}}Page extends StatelessWidget {
   /// 创建页面。
   ///
   /// Creates the page.
-  const {{#pascalCase}}{{name}}{{/pascalCase}}Page({super.key, this.cubit});
+  const new({super.key, this.cubit});
 
   /// 仅用于测试注入的 Cubit。生产代码应始终使用 `getIt<{{#pascalCase}}{{name}}{{/pascalCase}}Repository>()` 创建。
   ///
