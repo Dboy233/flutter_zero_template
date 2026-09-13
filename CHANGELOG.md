@@ -4,6 +4,15 @@
 
 > 模板版本与 CLI 版本独立发布、互不绑定；二者之间的版本约束关系见文档「版本约束规则」（`flutter_zero_doc/docs/zh/versioning-rules.md`）。
 
+## [4.0.1] - 2026-09-13
+
+### Added
+- 三份 feature 系列 brick（`feature` / `feature_bloc` / `feature_cubit`）的 `data_sources/README.md` 新增「何时需要填充本目录」与「最小示例（编写 / 注册 / 引用）」两节：明确空目录是正常占位而非漏写、给出三类触发条件（后端未就绪 / 含本地存储 / Repository 含编排逻辑），并以中性的「分页拉取用户列表」演示「数据源 → 仓储」完整链路（抽象接口 + 远程实现 + Module 按 `kDebugMode` 切换 + Repository 映射），降低新手上手门槛。
+- `template_registry.json` 新增 `4.0.1` 条目，供 `fluzer` 拉取新版模板。
+
+### Changed
+- 修复三份 feature 砖 `data_sources/README.md` 中类名占位符 `{{Name}}` 的渲染 bug。
+
 ## [4.0.0] - 2026-09-09
 
 ### Added
